@@ -1,6 +1,5 @@
 const currentTask = process.env.npm_lifecycle_event;
 const path = require("path");
-const Dotenv = require("dotenv-webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -21,7 +20,6 @@ config = {
     filename: "bundled.js"
   },
   plugins: [
-    new Dotenv(),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "app/index-template.html",
