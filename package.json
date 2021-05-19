@@ -8,7 +8,8 @@
   "license": "ISC",
   "scripts": {
     "dev": "webpack serve",
-    "build-dev": "webpack --mode development"
+    "build-dev": "webpack --mode development",
+    "build": "webpack"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",

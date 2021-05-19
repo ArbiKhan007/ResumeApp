@@ -9,10 +9,10 @@ module.exports = {
     path: path.resolve(__dirname + "app"),
     filename: "bundled.js"
   },
-  mode: "development",
+  mode: "production",
   devServer: {
     port: 3000,
-    contentBase: path.join(__dirname, "app"),
+    contentBase: path.join(__dirname, "dist"),
     hot: true,
     historyApiFallback: { index: "index.html" }
   },
