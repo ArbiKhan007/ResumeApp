@@ -11,6 +11,7 @@
     "build-dev": "webpack --mode development",
     "build": "webpack"
   },
+  "homepage": ".",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",

@@ -1,15 +1,33 @@
 const currentTask = process.env.npm_lifecycle_event;
 const path = require("path");
+const Dotenv = require("dotenv-webpack");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fse = require("fs-extra");
-const postCSSPlugins = [require("postcss-import"), require("postcss-simple-vars"), require("postcss-nested"), require("autoprefixer")];
 
 /*
   Because I didn't bother making CSS part of our
   webpack workflow for this project I'm just
   manually copying our CSS file to the DIST folder. 
 */
+
+const postCSSplugins = [require("postcss-import"), require("postcss-mixins"), require("postcss-simple-vars"), require("postcss-hexrgba"), require("postcss-nested"), require("autoprefixer")];
+
+class RunAfterCompile {
+  apply(compiler) {
+    compiler.hooks.done.tap("Copy files", function () {
+      fse.copySync("./app/main.css", "./dist/main.css");
+
+      /*
+        If you needed to copy another file or folder
+        such as your "images" folder, you could just
+        call fse.copySync() as many times as you need
+        to here to cover all of your files/folders.
+      */
+    });
+  }
+}
 
 config = {
   entry: "./app/Main.js",
@@ -19,6 +37,7 @@ config = {
     filename: "bundled.js"
   },
   plugins: [
+    new Dotenv(),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "app/index-template.html",
@@ -41,7 +60,15 @@ config = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader?url=false", { loader: "postcss-loader", options: { postcssOptions: { plugins: postCSSPlugins } } }]
+        use: [
+          "css-loader?url=false",
+          {
+            loader: "postcss-loader",
+            options: {
+              plugins: postCSSplugins
+            }
+          }
+        ]
       }
     ]
   }
@@ -57,7 +84,8 @@ if (currentTask == "webpackDev" || currentTask == "dev") {
   };
 }
 
-if (currentTask == "build") {
+if (currentTask == "webpackBuild") {
+  config.plugins.push(new CleanWebpackPlugin(), new RunAfterCompile());
   config.mode = "production";
   config.output = {
     publicPath: "/",
